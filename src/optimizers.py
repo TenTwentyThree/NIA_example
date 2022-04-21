@@ -20,6 +20,11 @@ class SimulatedAnnealing:
                      f'inhabitants and energy factor {self.energy_availability_factor}, happy annealing :)')
 
     def _set_new_search_space(self, prefix):
+        """
+        Loads search space parameters from file and sets them as object attributes
+        :param prefix: filename
+        :return: None
+        """
         path = os.path.join(os.path.abspath('.'), 'data')
         self.households = np.load(os.path.join(path, prefix + 'households.npy'))
         self.consumption = np.load(os.path.join(path, prefix + 'household_consumption.npy'))
@@ -39,6 +44,11 @@ class SimulatedAnnealing:
         return pd.Series(self.households[indices]).value_counts()
 
     def score(self, candidate_solution):
+        """
+        Computes the score of a candidate solution
+        :param candidate_solution: binary array representing a candidate solution
+        :return: score relative to maximum
+        """
         indices = [n for n, i in enumerate(candidate_solution) if i == 1]
         if np.sum(self.consumption[indices]) > self.available_energy:
             return 0
@@ -54,6 +64,11 @@ class SimulatedAnnealing:
         return s1
 
     def generate_neighbor(self, candidate):
+        """
+        Randomly generates a neighboring state to an existing state
+        :param candidate: solution candidate binary array
+        :return: neighboring state binary array
+        """
         change_index = np.random.randint(0, len(candidate))
         neighbor = candidate.copy()
         if neighbor[change_index] == 1:
@@ -63,6 +78,13 @@ class SimulatedAnnealing:
         return neighbor
 
     def delta_anneal(self, cold_start=True, delta_temp=1, label=0):
+        """
+        Perform simulated annealing
+        :param cold_start: Whether the initial state starts with only 0s selected
+        :param delta_temp: steps the annealing process will take
+        :param label: label for dumping statistics of the annealing process into a pandas Dataframe
+        :return: 2 pandas dataframe objects that contain the results of the annealing process at every step
+        """
         history = []
         household_assign = []
         if delta_temp != 1:
