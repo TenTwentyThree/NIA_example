@@ -19,8 +19,8 @@ def visualize_total_score(results_frame, num_households):
     longest_frame = frame_lengths.iloc[0]
     x = np.arange(longest_frame)
     #y = np.arange(results_frame['Total Score'].max())
-    fig, ax = plt.subplots(figsize=(8, 15))
-    #ax.set_ylim(results_frame['Total Score'].values.min()-10, results_frame['Max score'].values.max())
+    fig, ax = plt.subplots(figsize=(15, 15))
+    ax.set_ylim(results_frame['Total Score'].values.min()-10, results_frame['Max score'].values.max())
 
     for index in frame_indices:
         sub_frame = results_frame.loc[results_frame['Label'] == index]
